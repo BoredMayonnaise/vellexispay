@@ -1,0 +1,20 @@
+# Dependencies / builds
+node_modules/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+
+# Environment & secrets
+.env*
+!.env.example
+
+# OS
+.DS_Store
+
+# Workspace-local agent tooling (kept out of the published repo by user request)
+.opencode/
+PLANS.md
+AGENTS.md
+*_implementation_plan.md
