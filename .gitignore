@@ -9,6 +9,15 @@ next-env.d.ts
 # Environment & secrets
 .env*
 !.env.example
+# Editor swap/backup files for .env do NOT match `.env*` (leading dot), and they
+# carry the same secret in plaintext. Cover the common suffix forms explicitly.
+.*.env.*
+.*.env.swp
+*.env.swp
+*.env.bak
+*~
+.*.swp
+.*.bak
 
 # OS
 .DS_Store
