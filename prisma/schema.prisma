@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum TierName {
+  draft
+  standard
+  premium
+}
+
+model Tier {
+  id        String   @id @default(cuid())
+  name      TierName @unique
+  /// Percentage of capacity in use, 0-100. Mirrors src/lib/route.ts SATURATION.
+  loadPct   Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  models Model[]
+  logs   RouteLog[]
+}
+
+model Model {
+  id           String   @id @default(cuid())
+  /// Provider-qualified id, e.g. "anthropic/claude-sonnet-4-5".
+  providerId   String   @unique
+  displayName  String
+  tierId       String
+  /// Cost per 1k tokens. Needed before resolveRoute can rank on price.
+  costPer1k    Int
+  contextLimit Int      @default(0)
+  enabled      Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  tier Tier       @relation(fields: [tierId], references: [id], onDelete: Cascade)
+  logs RouteLog[]
+
+  @@index([tierId, enabled])
+}
+
+model RouteLog {
+  id         String   @id @default(cuid())
+  tierId     String
+  modelId    String?
+  requested  TierName
+  served     TierName
+  shed       Boolean  @default(false)
+  latencyMs  Int?
+  createdAt  DateTime @default(now())
+
+  tier  Tier   @relation(fields: [tierId], references: [id], onDelete: Cascade)
+  model Model? @relation(fields: [modelId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([tierId, shed])
+}
