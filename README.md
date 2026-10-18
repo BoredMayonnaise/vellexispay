@@ -1,4 +1,4 @@
-# payverify_ph
+# vellexispay
 
 Multi-tier AI routing framework for OpenCode. TypeScript (strict) · Next.js App Router · Tailwind CSS · Prisma · pnpm · Vitest.
 
