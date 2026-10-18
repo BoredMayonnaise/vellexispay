@@ -13,7 +13,11 @@ pnpm dev
 
 ## Dashboard access
 
-`/` is gated by a bearer token. Without one it returns 401.
+`/` is gated. Open `http://localhost:3000` in a browser — you are redirected to
+`/login`, where you paste the token from `.env`. That sets an `httpOnly` session
+cookie for 12 hours.
+
+For curl and CI, send the token as a bearer header instead:
 
 ```sh
 TOKEN=$(grep DASHBOARD_TOKEN .env | cut -d'"' -f2)
